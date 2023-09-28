@@ -4,12 +4,15 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Matchmaking from "./components/matchmaking";
 import Header from "./components/Header";
+import Team from "./components/Team";
 function App() {
   return (
     <>
       <Header />
-      <div className="w-full flex justify-center p-2">
+      <div className="w-full flex justify-between p-8">
+        <Team />
         <Matchmaking />
+        <Team />
       </div>
     </>
   );

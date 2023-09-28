@@ -1,4 +1,13 @@
 #root {
   margin: 0 auto;
   text-align: center;
+  background-color: gainsboro;
+  height: 100vh;
+}
+
+* {
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
 }

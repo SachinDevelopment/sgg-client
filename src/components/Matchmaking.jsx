@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Input } from "@material-tailwind/react";
 
 const players = [
   { player: "sachin", champ: "" },
@@ -7,41 +8,45 @@ const players = [
   { player: "jonah", champ: "" },
 ];
 const Matchmaking = () => {
-  const [champ, setChamp] = useState([]);
+  const [allChamps, setAllChamps] = useState([]);
+  const [activeChamps, setActiveChamps] = useState([]);
   const [blueTeam, setBlueTeam] = useState(players);
-
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    //Implementing the setInterval method
-    const interval = setInterval(() => {
-      if (count <= 30) {
-        setCount(count + 1);
-      } else {
-        setCount(0);
-      }
-    }, 1000);
-
-    //Clearing the interval
-    return () => clearInterval(interval);
-  }, [count]);
 
   useEffect(() => {
     (async () => {
       const result = await axios.get(
         "http://ddragon.leagueoflegends.com/cdn/13.19.1/data/en_US/champion.json"
       );
-      setChamp(Object.values(result.data.data));
+      const c = Object.values(result.data.data);
+      setAllChamps(c);
+      setActiveChamps(c);
     })();
-  }, [setChamp]);
+  }, [setAllChamps, setActiveChamps]);
+  console.log(activeChamps);
+
+  const search = (e) => {
+    console.log(e.target.value);
+    if (!e.target.value) {
+      setActiveChamps(allChamps);
+    } else {
+      setActiveChamps(
+        allChamps.filter((champ) =>
+          champ.name.toLowerCase().startsWith(e.target.value.toLowerCase())
+        )
+      );
+    }
+  };
 
   return (
-    <div className="w-3/4 flex justify-center">
-      <div className="grid grid-cols-10 gap-4 w-50v overflow-auto h-70v">
-        {champ.map((c) => (
+    <div className=" w-50v flex flex-col items-center">
+      <div className="w-3/4">
+        <Input label="Champion" onChange={search} />
+      </div>
+      <div className="flex flex-wrap w-50v gap-4 overflow-auto max-h-70v p-4">
+        {activeChamps.map((c) => (
           <img
             src={`http://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${c.id}.png`}
-            // onClick={() => setBlueTeam((prev) => [...prev, c])}
+            className="w-20 h-20"
           />
         ))}
       </div>
